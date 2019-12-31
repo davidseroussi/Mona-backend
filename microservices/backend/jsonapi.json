@@ -1,0 +1,130 @@
+
+"toujours envoyer en header Content-Type: application/vnd.api+jso",
+"toujours avoir au moins data, ou error, ou meta",
+"on NE PEUT PAS avoir data + error"
+       
+{
+    "data": {
+        "type": "articles",
+        "id": "1",
+        "attributes": {
+            // ... this article's attributes
+        },
+        "relationships": {
+            // ... this article's relationships
+        }
+    }
+}
+
+HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+
+{
+  "links": {
+    "self": "http://example.com/articles"
+  },
+  "data": [{
+    "type": "articles",
+    "id": "1",
+    "attributes": {
+      "title": "JSON:API paints my bikeshed!"
+    }
+  }, {
+    "type": "articles",
+    "id": "2",
+    "attributes": {
+      "title": "Rails is Omakase"
+    }
+  }]
+}
+
+A request MUST completely succeed or fail (in a single “transaction”). No partial updates are allowed.
+
+
+
+--- Creating Resources
+
+Request :
+
+POST /exhibitions HTTP/1.1
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "exhibitions",
+    "attributes": {
+      "title": "Grèce antique",
+    },
+    "relationships": {
+      "museum": {
+        "data": { 
+            "type": "museum", 
+            "id": "9" 
+        }
+      }
+    }
+  }
+}
+
+if all good,
+Response :
+HTTP/1.1 201 Created
+Location: http://example.com/exhibitions/550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/vnd.api+json
+
+{
+  "data": {
+    "type": "exhibitions",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "attributes": {
+      "title": "Grèce antique",
+    },
+    "relationships": {
+        "museum": {
+          "data": { 
+              "type": "museums", 
+              "id": "9" 
+          }
+        }
+    },
+    "links": {
+      "self": "http://example.com/exhibitions/550e8400-e29b-41d4-a716-446655440000"
+    }
+  }
+}
+
+
+Updating Resources
+
+PATCH /exhibitions/1 HTTP/1.1
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+For instance, the following PATCH request will update the title of an exhibition:
+{
+  "data": {
+    "type": "exhibitions",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "attributes": {
+      "title": "To TDD or Not"
+    }
+  }
+}
+
+PATCH /articles/1 HTTP/1.1
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+For instance, the following PATCH request will update the museum of an exhibition:
+{
+  "data": {
+    "type": "exhibitions",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "relationships": {
+      "museum": {
+        "data": { "type": "museums", "id": "1" }
+      }
+    }
+  }
+}

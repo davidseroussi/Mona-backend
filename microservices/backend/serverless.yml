@@ -1,0 +1,50 @@
+service: mona-test
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  debug:
+    handler: index.debug
+    events:
+      - http: POST debug
+
+  museums_create:
+    handler: controllers/museums.create
+    events:
+      - http:
+          path: museums
+          method: post
+
+  museums_get:
+    handler: controllers/museums.get
+    events:
+      - http:
+          path: museums
+          method: get
+
+
+  exhibitions_create:
+    handler: controllers/exhibitions.create
+    events:
+      - http:
+          path: exhibitions
+          method: post
+          
+  exhibitions_get:
+    handler: controllers/exhibitions.get
+    events:
+      - http:
+          path: exhibitions
+          method: get
+      
+  exhibitions_update:
+    handler: controllers/exhibitions.update
+    events:
+      - http:
+          path: exhibitions
+          method: patch
+      
+plugins:
+  - serverless-offline
