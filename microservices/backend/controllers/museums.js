@@ -1,36 +1,32 @@
-const mongoose = require('mongoose');
-const R = require('ramda');
-const requestHandler = require('../requestHandler');
-const Museum = require('../models/museum');
-const U = require('../utils');
+const R = require("ramda");
+const Museum = require("../models/museum");
+const Request = require("../core/request");
+const RequestHandler = require("../core/requestHandler");
+const Database = require("../core/database");
 
-let db_uri = 'mongodb://127.0.0.1:27017/db-mona'
+Database.connect();
 
-mongoose.connect(db_uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const insertMuseum = async (data) =>
+    new Museum({ title: data.title })
+        .save()
+        .then((museum) => Request.response(201, museum))
+        .catch(Request.dbError);
 
-const insertMuseum = async data => new Museum({ title: data.title })
-    .save()
-    .then(museum => U.response(201, museum))
-    .catch(U.dbError);
-
-const createMuseum = R.pipeWith(U.hasNoError, [
-    U.fieldCheck(['title']),
-    insertMuseum
+const createMuseum = R.pipeWith(Request.hasNoError, [
+    Request.fieldCheck(["title"]),
+    insertMuseum,
 ]);
 
-const getMuseums = async data => Museum
-    .find({})
-    .exec()
-    .then(museums => U.response(200, museums))
-    .catch(U.dbError);
+const getMuseums = async (data) =>
+    Museum.find({})
+        .exec()
+        .then((museums) => Request.response(200, museums))
+        .catch(Request.dbError);
 
-const create = async event => requestHandler(createMuseum)(event);
-const get = async event => requestHandler(getMuseums)(event);
+const create = async (event) => RequestHandler.handle(createMuseum)(event);
+const get = async (event) => RequestHandler.handle(getMuseums)(event);
 
 module.exports = {
     create,
-    get
+    get,
 };

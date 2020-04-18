@@ -1,0 +1,4 @@
+db:
+    user: pierre
+    password: 3wgmks0p2AqWpDLj
+    uri: mongodb+srv://${db.user}:${db.password}@monatest-xem8f.mongodb.net/test?retryWrites=true&w=majority
