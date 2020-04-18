@@ -46,24 +46,24 @@ functions:
                   method: patch
 
     artworks_create:
-        handler: controllers/exhibitions.create
+        handler: controllers/artworks.create
         events:
             - http:
-                  path: exhibitions
+                  path: artworks
                   method: post
 
     artworks_get:
-        handler: controllers/exhibitions.get
+        handler: controllers/artworks.get
         events:
             - http:
-                  path: exhibitions
+                  path: artworks
                   method: get
 
     artworks_update:
-        handler: controllers/exhibitions.update
+        handler: controllers/artworks.update
         events:
             - http:
-                  path: exhibitions
+                  path: artworks
                   method: patch
 
 plugins:
