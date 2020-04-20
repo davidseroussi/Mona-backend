@@ -15,16 +15,14 @@ const attachArtworkToExhibition = async (exhibition, artwork) => {
 };
 
 const updateArtworkOfExhibition = async (data) => {
-    const exhibition = await findArtwork({ _id: data.artworkId }).catch(
-        () => null
-    );
+    const exhibition = await findArtwork({ _id: data.artworkId }).catch(() => null);
     if (exhibition === null) return Request.error(404, "Exhibition not found");
 
     return Artwork.findByIdAndUpdate(data.artwork.id, data.artwork, {
         new: true,
     })
         .exec()
-        .then((e) => response(200, e))
+        .then((e) => Request.response(200, e))
         .catch(Request.dbError);
 };
 
@@ -32,7 +30,7 @@ const getArtworksOfExhibition = async (data) => {
     return Exhibition.findById(data.exhibitionId)
         .populate("artworks")
         .exec()
-        .then((m) => response(200, m.artworks))
+        .then((m) => Request.response(200, m.artworks))
         .catch((err) => Request.error(404, "Exhibition not found"));
 };
 
@@ -53,7 +51,7 @@ const createArtworkOfExhibition = async (data) => {
     ).catch(Request.dbError);
     if (Request.hasError(updatedExhibition)) return updatedExhibition;
 
-    return response(201, updatedExhibition);
+    return Request.response(201, updatedExhibition);
 };
 
 const createArtwork = R.pipeWith(Request.hasNoError, [

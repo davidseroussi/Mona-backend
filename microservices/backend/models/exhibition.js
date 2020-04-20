@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const ratingSubSchema = require("./sub_rating");
 
 const exhibitionSchema = new Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     title: {
         type: String,
         required: [true, "Title is missing"],

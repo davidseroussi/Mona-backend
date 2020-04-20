@@ -16,10 +16,16 @@ const fieldCheck = (path) =>
         R.always(error(400, [pathDescription(path) + " is missing"]))
     );
 
-const error = (code, errors) =>
-    response(code, {
+const error = (code, errors) => {
+    if(!Array.isArray(errors)){
+        errors = [errors]
+    }
+
+    return response(code, {
         errors: errors,
     });
+}
+
 
 const hasNoError = R.unless(R.hasPath(["body", "errors"]));
 const hasError = R.hasPath(["body", "errors"]);
@@ -30,11 +36,15 @@ const dbError = (err) => {
 
         R.forEachObjIndexed(
             (val, key) => errors.push(val),
-            R.map(R.prop("message"), err.errors)
+            R.map(
+                R.prop("message"),
+                err.errors
+            )
         );
 
         return error(400, R.when(R.isEmpty, ["Unknown error"])(errors));
     } catch (err2) {
+        console.log(err);
         console.log(err2);
         return error(500, ["Unknown error"]);
     }

@@ -18,19 +18,23 @@ const updateExhibitionOfMuseum = async (data) => {
     const museum = await findMuseum({ _id: data.museumId }).catch(() => null);
     if (museum === null) return Request.error(404, "Museum not found");
 
-    return Exhibition.findByIdAndUpdate(data.exhibition.id, data.exhibition, {
-        new: true,
-    })
-        .exec()
-        .then((e) => response(200, e))
-        .catch(Request.dbError);
+    const exhibition = await Exhibition.findByIdAndUpdate(
+        data.exhibition.id,
+        data.exhibition,
+        { new: true }
+    ).exec().catch(Request.dbError)
+
+    if (exhibition === null) return Request.error(404, "Exhibition not found");
+    if (Request.hasError(exhibition)) return exhibition;
+
+    return Request.response(200, exhibition);
 };
 
 const getExhibitionsOfMuseum = async (data) => {
     return Museum.findById(data.museumId)
         .populate("exhibitions")
         .exec()
-        .then((m) => response(200, m.exhibitions))
+        .then((m) => Request.response(200, m.exhibitions))
         .catch((err) => Request.error(404, "Museum not found"));
 };
 
@@ -38,9 +42,9 @@ const createExhibitionOfMuseum = async (data) => {
     const museum = await findMuseum({ _id: data.museumId }).catch(() => null);
     if (museum === null) return Request.error(404, "Museum not found");
 
-    const exhibition = await insertExhibition(
-        new Exhibition({ title: data.title })
-    ).catch(Request.dbError);
+    const exhibition = await insertExhibition(new Exhibition({ title: data.title }))
+        .catch(Request.dbError);
+
     if (Request.hasError(exhibition)) return exhibition;
 
     const updatedMuseum = await attachExhibitionToMuseum(
@@ -49,7 +53,7 @@ const createExhibitionOfMuseum = async (data) => {
     ).catch(Request.dbError);
     if (Request.hasError(updatedMuseum)) return updatedMuseum;
 
-    return response(201, updatedMuseum);
+    return Request.response(201, updatedMuseum);
 };
 
 const createExhibition = R.pipeWith(Request.hasNoError, [
