@@ -2,7 +2,8 @@ service: mona-test
 
 provider:
     name: aws
-    runtime: nodejs8.10
+    region: eu-west-3
+    runtime: nodejs12.x
 
 functions:
     debug:
@@ -16,6 +17,7 @@ functions:
             - http:
                   path: museums
                   method: post
+                  cors: true
 
     museums_get:
         handler: controllers/museums.get
@@ -23,6 +25,7 @@ functions:
             - http:
                   path: museums
                   method: get
+                  cors: true
 
     exhibitions_create:
         handler: controllers/exhibitions.create
@@ -30,6 +33,7 @@ functions:
             - http:
                   path: exhibitions
                   method: post
+                  cors: true
 
     exhibitions_get:
         handler: controllers/exhibitions.get
@@ -37,13 +41,15 @@ functions:
             - http:
                   path: exhibitions
                   method: get
+                  cors: true
 
     exhibitions_update:
         handler: controllers/exhibitions.update
         events:
             - http:
-                  path: exhibitions
+                  path: exhibitions/{exhibitionId}
                   method: patch
+                  cors: true
 
     artworks_create:
         handler: controllers/artworks.create
@@ -51,6 +57,7 @@ functions:
             - http:
                   path: artworks
                   method: post
+                  cors: true
 
     artworks_get:
         handler: controllers/artworks.get
@@ -58,13 +65,15 @@ functions:
             - http:
                   path: artworks
                   method: get
+                  cors: true
 
     artworks_update:
         handler: controllers/artworks.update
         events:
             - http:
-                  path: artworks
+                  path: artworks/{artworkId}
                   method: patch
+                  cors: true
 
 plugins:
     - serverless-offline

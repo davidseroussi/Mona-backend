@@ -2,3 +2,11 @@ db:
     user: pierre
     password: 3wgmks0p2AqWpDLj
     uri: mongodb+srv://${db.user}:${db.password}@monatest-xem8f.mongodb.net/test?retryWrites=true&w=majority
+
+db_david:
+    user: david
+    password: rz3v3kB8pkwsvtFS
+    uri: mongodb+srv://${db_david.user}:${db_david.password}@cluster0-n86p3.mongodb.net/test?retryWrites=true&w=majority
+
+db_local:
+    uri: 'mongodb://mongo:27017/db-mona'
