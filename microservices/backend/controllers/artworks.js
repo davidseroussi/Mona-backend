@@ -130,9 +130,9 @@ const updateArtwork = R.pipeWith(Request.hasNoError, [
 	updateArtworkOfMuseum
 ]);
 
-const create = async event => RequestHandler.handle(createArtwork)(event);
+const create = async event => RequestHandler.handle(createArtwork, ['queryStringParameters'])(event);
 const get = async event => RequestHandler.handle(getArtworks)(event);
-const update = async event => RequestHandler.handle(updateArtwork, ['pathParameters'])(event);
+const update = async event => RequestHandler.handle(updateArtwork, ['pathParameters', 'queryStringParameters'])(event);
 
 module.exports = {
 	create,
