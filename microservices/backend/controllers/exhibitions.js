@@ -64,7 +64,7 @@ const createExhibitionOfMuseum = async data => {
 		return updatedMuseum;
 	}
 
-	return Request.response(201, updatedMuseum);
+	return Request.response(201, exhibition);
 };
 
 const createExhibition = R.pipeWith(Request.hasNoError, [
