@@ -35,11 +35,19 @@ functions:
                   method: post
                   cors: true
 
+    exhibitions_get_all:
+        handler: controllers/exhibitions.getAll
+        events:
+            - http:
+                  path: exhibitions
+                  method: get
+                  cors: true
+
     exhibitions_get:
         handler: controllers/exhibitions.get
         events:
             - http:
-                  path: exhibitions
+                  path: exhibitions/{exhibitionId}
                   method: get
                   cors: true
 

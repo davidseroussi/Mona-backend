@@ -1,5 +1,6 @@
 const R = require('ramda');
 const Museum = require('../models/museum');
+const Artwork = require('../models/artwork');
 const Exhibition = require('../models/exhibition');
 const Request = require('../core/request');
 const RequestHandler = require('../core/request-handler');
@@ -37,11 +38,33 @@ const updateExhibitionOfMuseum = async data => {
 	return Request.response(200, exhibition);
 };
 
-const getExhibitionsOfMuseum = async data => Museum.findById(data.museumId)
+const getAllExhibitionsOfMuseum = async data => Museum.findById(data.museumId)
 	.populate('exhibitions')
 	.exec()
 	.then(m => Request.response(200, m.exhibitions))
 	.catch(_ => Request.error(404, 'Museum not found'));
+
+const getExhibitionOfMuseum = async data => {
+	const museum = await Museum.findById(data.museumId)
+		.populate('exhibitions')
+		.exec()
+		.catch(() => null);
+
+	if (museum === null) {
+		return Request.error(404, 'Museum not found');
+	}
+
+	const exhibition = await Exhibition.findById(data.exhibitionId)
+		.populate('artworks')
+		.exec()
+		.catch(() => null);
+
+	if (R.isNil(exhibition)) {
+		return Request.error(404, 'Exhibition not found');
+	}
+
+	return Request.response(200, exhibition);
+};
 
 const createExhibitionOfMuseum = async data => {
 	const museum = await findMuseum({_id: data.museumId}).catch(() => null);
@@ -73,9 +96,15 @@ const createExhibition = R.pipeWith(Request.hasNoError, [
 	createExhibitionOfMuseum
 ]);
 
-const getExhibitions = R.pipeWith(Request.hasNoError, [
+const getAllExhibitions = R.pipeWith(Request.hasNoError, [
 	Request.fieldCheck(['museumId']),
-	getExhibitionsOfMuseum
+	getAllExhibitionsOfMuseum
+]);
+
+const getExhibition = R.pipeWith(Request.hasNoError, [
+	Request.fieldCheck(['museumId']),
+	Request.fieldCheck(['exhibitionId']),
+	getExhibitionOfMuseum
 ]);
 
 const updateExhibition = R.pipeWith(Request.hasNoError, [
@@ -86,11 +115,13 @@ const updateExhibition = R.pipeWith(Request.hasNoError, [
 ]);
 
 const create = async event => RequestHandler.handle(createExhibition)(event);
-const get = async event => RequestHandler.handle(getExhibitions)(event);
+const get = async event => RequestHandler.handle(getExhibition, ['pathParameters'])(event);
+const getAll = async event => RequestHandler.handle(getAllExhibitions)(event);
 const update = async event => RequestHandler.handle(updateExhibition, ['pathParameters'])(event);
 
 module.exports = {
 	create,
 	get,
+	getAll,
 	update
 };
