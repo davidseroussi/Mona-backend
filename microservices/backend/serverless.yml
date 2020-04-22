@@ -2,7 +2,8 @@ service: mona-test
 
 provider:
     name: aws
-    runtime: nodejs8.10
+    region: eu-west-3
+    runtime: nodejs12.x
 
 functions:
     debug:
@@ -42,7 +43,7 @@ functions:
         handler: controllers/exhibitions.update
         events:
             - http:
-                  path: exhibitions
+                  path: exhibitions/{exhibitionId}
                   method: patch
 
     artworks_create:
@@ -63,7 +64,7 @@ functions:
         handler: controllers/artworks.update
         events:
             - http:
-                  path: artworks
+                  path: artworks/{artworkId}
                   method: patch
 
 plugins:
