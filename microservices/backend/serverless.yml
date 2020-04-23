@@ -19,11 +19,19 @@ functions:
                   method: post
                   cors: true
 
+    museums_get_all:
+        handler: controllers/museums.getAll
+        events:
+            - http:
+                  path: museums
+                  method: get
+                  cors: true
+
     museums_get:
         handler: controllers/museums.get
         events:
             - http:
-                  path: museums
+                  path: museums/{museumId}
                   method: get
                   cors: true
 
