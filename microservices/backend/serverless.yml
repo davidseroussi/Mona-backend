@@ -91,5 +91,13 @@ functions:
                   method: patch
                   cors: true
 
+    artworks_delete:
+        handler: controllers/artworks.deleteOne
+        events:
+            - http:
+                  path: artworks/{artworkId}
+                  method: delete
+                  cors: true
+
 plugins:
     - serverless-offline

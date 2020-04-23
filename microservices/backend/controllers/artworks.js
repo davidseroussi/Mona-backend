@@ -27,7 +27,7 @@ const updateArtworkOfMuseum = async data => {
 	// If data contains a different exhibition than the one in artwork,
 	// send an error
 	if (!R.isNil(data.artwork.exhibition) && !R.isNil(artwork.exhibition) &&
-        artwork.exhibition.toString() !== data.artwork.exhibition) {
+		artwork.exhibition.toString() !== data.artwork.exhibition) {
 		return Request.error(400, 'Artwork already has an exhibition');
 	}
 
@@ -53,6 +53,7 @@ const updateArtworkOfMuseum = async data => {
 		data.artwork,
 		{new: true}
 	).populate('exhibition').exec().catch(Request.dbError);
+
 	if (Request.hasError(artwork)) {
 		return artwork;
 	}
@@ -112,6 +113,39 @@ const createArtworkOfMuseum = async data => {
 	return Request.response(201, artwork);
 };
 
+const deleteArtworkOfMuseum = async data => {
+	const museum = await Museum.findById(data.museumId)
+		.exec()
+		.catch(() => null);
+
+	if (museum === null) {
+		return Request.error(404, 'Museum not found');
+	}
+
+	const artwork = await Artwork.findByIdAndDelete(data.artworkId)
+		.populate('exhibition')
+		.exec()
+		.catch(Request.dbError);
+
+	if (artwork === null) {
+		return Request.error(404, 'Artwork not found');
+	}
+
+	if (Request.hasError(artwork)) {
+		return artwork;
+	}
+
+	// Remove artwork from museum
+	museum.artworks.pull({_id: artwork._id});
+	museum.save();
+
+	// Remove artwork from exhibition
+	artwork.exhibition.artworks.pull({_id: artwork._id});
+	artwork.exhibition.save();
+
+	return Request.response(200, artwork);
+};
+
 const createArtwork = R.pipeWith(Request.hasNoError, [
 	Request.fieldCheck(['museumId']),
 	Request.fieldCheck(['artwork']),
@@ -130,12 +164,20 @@ const updateArtwork = R.pipeWith(Request.hasNoError, [
 	updateArtworkOfMuseum
 ]);
 
+const deleteArtwork = R.pipeWith(Request.hasNoError, [
+	Request.fieldCheck(['museumId']),
+	Request.fieldCheck(['artworkId']),
+	deleteArtworkOfMuseum
+]);
+
 const create = async event => RequestHandler.handle(createArtwork, ['queryStringParameters'])(event);
 const get = async event => RequestHandler.handle(getArtworks)(event);
 const update = async event => RequestHandler.handle(updateArtwork, ['pathParameters', 'queryStringParameters'])(event);
+const deleteOne = async event => RequestHandler.handle(deleteArtwork, ['pathParameters', 'queryStringParameters'])(event);
 
 module.exports = {
 	create,
 	get,
-	update
+	update,
+	deleteOne
 };
