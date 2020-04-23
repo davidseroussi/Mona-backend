@@ -19,11 +19,19 @@ functions:
                   method: post
                   cors: true
 
+    museums_get_all:
+        handler: controllers/museums.getAll
+        events:
+            - http:
+                  path: museums
+                  method: get
+                  cors: true
+
     museums_get:
         handler: controllers/museums.get
         events:
             - http:
-                  path: museums
+                  path: museums/{museumId}
                   method: get
                   cors: true
 
@@ -35,11 +43,19 @@ functions:
                   method: post
                   cors: true
 
+    exhibitions_get_all:
+        handler: controllers/exhibitions.getAll
+        events:
+            - http:
+                  path: exhibitions
+                  method: get
+                  cors: true
+
     exhibitions_get:
         handler: controllers/exhibitions.get
         events:
             - http:
-                  path: exhibitions
+                  path: exhibitions/{exhibitionId}
                   method: get
                   cors: true
 
@@ -49,6 +65,14 @@ functions:
             - http:
                   path: exhibitions/{exhibitionId}
                   method: patch
+                  cors: true
+
+    exhibitions_delete:
+        handler: controllers/exhibitions.deleteOne
+        events:
+            - http:
+                  path: exhibitions/{exhibitionId}
+                  method: delete
                   cors: true
 
     artworks_create:
@@ -73,6 +97,14 @@ functions:
             - http:
                   path: artworks/{artworkId}
                   method: patch
+                  cors: true
+
+    artworks_delete:
+        handler: controllers/artworks.deleteOne
+        events:
+            - http:
+                  path: artworks/{artworkId}
+                  method: delete
                   cors: true
 
 plugins:

@@ -16,15 +16,27 @@ const createMuseum = R.pipeWith(Request.hasNoError, [
 	insertMuseum
 ]);
 
-const getMuseums = async _ => Museum.find({})
+const getOneMuseum = async data => Museum.findById(data.museumId)
+	.exec()
+	.then(museum => Request.response(200, museum))
+	.catch(() => Request.error(404, 'Museum not found'));
+
+const getMuseum = R.pipeWith(Request.hasNoError, [
+	Request.fieldCheck(['museumId']),
+	getOneMuseum
+]);
+
+const getAllMuseums = async _ => Museum.find({})
 	.exec()
 	.then(museums => Request.response(200, museums))
 	.catch(Request.dbError);
 
 const create = async event => RequestHandler.handle(createMuseum)(event);
-const get = async event => RequestHandler.handle(getMuseums)(event);
+const getAll = async event => RequestHandler.handle(getAllMuseums)(event);
+const get = async event => RequestHandler.handle(getMuseum, ['pathParameters'])(event);
 
 module.exports = {
 	create,
-	get
+	get,
+	getAll
 };
