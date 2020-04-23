@@ -67,6 +67,14 @@ functions:
                   method: patch
                   cors: true
 
+    exhibitions_delete:
+        handler: controllers/exhibitions.deleteOne
+        events:
+            - http:
+                  path: exhibitions/{exhibitionId}
+                  method: delete
+                  cors: true
+
     artworks_create:
         handler: controllers/artworks.create
         events:

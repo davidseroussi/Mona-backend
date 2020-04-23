@@ -16,7 +16,7 @@ const attachExhibitionToMuseum = async (museum, exhibition) => {
 };
 
 const updateExhibitionOfMuseum = async data => {
-	const museum = await findMuseum({_id: data.museumId}).catch(() => null);
+	const museum = await findMuseum({ _id: data.museumId }).catch(() => null);
 	if (museum === null) {
 		return Request.error(404, 'Museum not found');
 	}
@@ -24,7 +24,7 @@ const updateExhibitionOfMuseum = async data => {
 	const exhibition = await Exhibition.findByIdAndUpdate(
 		data.exhibitionId,
 		data.exhibition,
-		{new: true}
+		{ new: true }
 	).exec().catch(Request.dbError);
 
 	if (exhibition === null) {
@@ -67,12 +67,12 @@ const getExhibitionOfMuseum = async data => {
 };
 
 const createExhibitionOfMuseum = async data => {
-	const museum = await findMuseum({_id: data.museumId}).catch(() => null);
+	const museum = await findMuseum({ _id: data.museumId }).catch(() => null);
 	if (museum === null) {
 		return Request.error(404, 'Museum not found');
 	}
 
-	const exhibition = await insertExhibition(new Exhibition({title: data.title}))
+	const exhibition = await insertExhibition(new Exhibition({ title: data.title }))
 		.catch(Request.dbError);
 
 	if (Request.hasError(exhibition)) {
@@ -89,6 +89,40 @@ const createExhibitionOfMuseum = async data => {
 
 	return Request.response(201, exhibition);
 };
+
+const deleteExhibitionOfMuseum = async data => {
+	const museum = await Museum.findById(data.museumId).exec().catch(() => null);
+	if (museum === null) {
+		return Request.error(404, 'Museum not found');
+	}
+
+	const exhibition = await Exhibition.findByIdAndDelete(data.exhibitionId)
+		.exec()
+		.catch(Request.dbError);
+
+	if (exhibition === null) {
+		return Request.error(404, 'Exhibition not found');
+	}
+
+	if (Request.hasError(exhibition)) {
+		return exhibition;
+	}
+
+	// Remove exhibition from museum
+	museum.exhibitions.pull({ _id: exhibition._id });
+	await museum.save();
+
+	// Remove exhibition from attached artworks
+	const res = await Artwork.updateMany(
+		{ exhibition: exhibition._id }, { $unset: { exhibition: 1 } }
+	).catch(Request.dbError);
+
+	if (Request.hasError(res)) {
+		return artwork;
+	}
+
+	return Request.response(200, undefined);
+}
 
 const createExhibition = R.pipeWith(Request.hasNoError, [
 	Request.fieldCheck(['museumId']),
@@ -114,14 +148,22 @@ const updateExhibition = R.pipeWith(Request.hasNoError, [
 	updateExhibitionOfMuseum
 ]);
 
+const deleteExhibition = R.pipeWith(Request.hasNoError, [
+	Request.fieldCheck(['museumId']),
+	Request.fieldCheck(['exhibitionId']),
+	deleteExhibitionOfMuseum
+]);
+
 const create = async event => RequestHandler.handle(createExhibition, ['queryStringParameters'])(event);
 const get = async event => RequestHandler.handle(getExhibition, ['pathParameters'])(event);
 const getAll = async event => RequestHandler.handle(getAllExhibitions)(event);
 const update = async event => RequestHandler.handle(updateExhibition, ['pathParameters', 'queryStringParameters'])(event);
+const deleteOne = async event => RequestHandler.handle(deleteExhibition, ['pathParameters', 'queryStringParameters'])(event);
 
 module.exports = {
 	create,
 	get,
 	getAll,
-	update
+	update,
+	deleteOne
 };

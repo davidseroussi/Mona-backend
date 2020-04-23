@@ -137,13 +137,13 @@ const deleteArtworkOfMuseum = async data => {
 
 	// Remove artwork from museum
 	museum.artworks.pull({_id: artwork._id});
-	museum.save();
+	await museum.save();
 
 	// Remove artwork from exhibition
 	artwork.exhibition.artworks.pull({_id: artwork._id});
-	artwork.exhibition.save();
+	await artwork.exhibition.save();
 
-	return Request.response(200, artwork);
+	return Request.response(200, undefined);
 };
 
 const createArtwork = R.pipeWith(Request.hasNoError, [
