@@ -1,21 +1,14 @@
 # Mona-backend
 
+## Routes
+https://app.swaggerhub.com/apis/davidseroussi/Mona/1.0.0
+
 ## Intro
 Backend offrant des routes permettant de gérer des musées et leurs expositions. Il est composé d'un seul microservice et est designé pour être utilisé par un backoffice et plusieurs frontends (app, webapp). La base de données utilisée est MongoDB, pour des raisons que nous verrons plus tard.   L'environnement de développement est donc composé de deux images Docker: une pour la base de données, une pour le microservice, le tout étant regroupé facilement avec docker compose.   
 Un simple `docker-compose up` permet donc de lancer le projet.
 
 Le microservice est déployé sur AWS, l'url de base est: https://wwdtrf36ka.execute-api.us-east-1.amazonaws.com/dev  
 La base de données est hébergée sur MongoDB Atlas.
-
-
-## Routes
-| Type  | Route  | Params  | Description  |
-|---|---|---|---|
-| POST  | /museums  | title: String  | Creates museum with title  |
-| GET | /museums  | None  | Gets all museums  |
-| POST  |  /exhibitions | museumId: Int <br/> title: String  | Creates exhibition associated with museum |
-| PATCH  |  /exhibitions | museumId: Int <br/> exhibition : Exhibition  | Updates exhibtion |
-| GET  |  /exhibitions | museumId: Int  | Gets all exhibitions of a museum  |
 
 ### Models
  
