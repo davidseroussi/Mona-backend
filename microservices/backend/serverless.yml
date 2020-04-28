@@ -1,4 +1,4 @@
-service: mona-test
+service: mona
 
 provider:
     name: aws
@@ -107,5 +107,18 @@ functions:
                   method: delete
                   cors: true
 
+custom:
+    apiGatewayServiceProxies:
+        - s3:
+            path: /s3/{object}
+            method: put
+            action: PutObject
+            key:
+                pathParam: object
+            bucket: mona-media-files
+            cors: true
+
 plugins:
-    - serverless-offline
+  - serverless-offline
+  - serverless-apigateway-service-proxy
+

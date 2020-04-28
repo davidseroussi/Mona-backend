@@ -19,6 +19,7 @@
     },
     "devDependencies": {
         "serverless": "^1.57.0",
+        "serverless-apigateway-service-proxy": "^1.7.0",
         "serverless-offline": "^5.12.0"
     }
 }
