@@ -11,9 +11,10 @@ functions:
         events:
             - http:
                 method: get
+                path: /
 
-    get_exhibitions:
-        handler: controllers/exhibitions.getAll
+    get_exhibitions_of_categories:
+        handler: controllers/exhibitions.getExhibitions
         events:
             - http:
                 path: exhibitions

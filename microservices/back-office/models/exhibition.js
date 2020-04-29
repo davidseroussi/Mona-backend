@@ -14,6 +14,28 @@ const exhibitionSchema = new Schema({
 		type: String,
 		required: [true, 'Title is missing']
 	},
+	categories: [
+		{
+			type: String,
+			enum: [
+				'Sciences',
+				'Cinéma',
+				'Arts Visuels',
+				'Sculpture',
+				'Musique',
+				'Littérature',
+				'Arts de la scène',
+				'Photographie',
+				'Bande dessinée',
+				'Jeu vidéo'
+			]
+		}
+	],
+	tags: [
+		{
+			type: String,
+		}
+	],
 	description: String,
 	imageUrl: String,
 	rates: [

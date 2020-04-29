@@ -12,8 +12,35 @@ const getAllExhibitions = async _ => Exhibition.find({})
 	.then(exhibitions => Request.response(200, exhibitions))
 	.catch(Request.dbError);
 
+const getRelevantCategories = async _ => {
+	const categories = ['Sciences', 'Cinéma', 'Arts Visuels', 'Sculpture', 'Musique']
+	return Request.response(200, categories);
+}
+
+const getExhibitionsOfCategories = async data => {
+
+	let condition = {};
+
+	if (!R.isNil(data.categories) && data.categories.length !== 0) {
+		condition = { categories: { $in: data.categories } }
+	}
+
+	return Exhibition
+		.find(condition)
+		.populate('museum')
+		.select('-visits')
+		.exec()
+		.then(exhibitions => Request.response(200, exhibitions))
+		.catch(Request.dbError);
+}
+
+
 const getAll = async event => RequestHandler.handle(getAllExhibitions)(event);
+const getCategories = async event => RequestHandler.handle(getRelevantCategories)(event);
+const getExhibitions = async event => RequestHandler.handle(getExhibitionsOfCategories, ['multiValueQueryStringParameters'])(event);
 
 module.exports = {
-    getAll
+	getAll,
+	getCategories,
+	getExhibitions
 }
