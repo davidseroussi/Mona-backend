@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "serverless offline start --skipCacheInvalidation -c",
+    "docker": "serverless offline start --skipCacheInvalidation -c --host 0.0.0.0"
+  },
+  "dependencies": {
+    "config-yml": "^0.10.3",
+    "mongodb": "^3.3.4",
+    "mongoose": "^5.7.11",
+    "nodemon": "^1.19.4",
+    "ramda": "^0.26.1",
+    "xo": "^0.29.1"
+  },
+  "devDependencies": {
+    "serverless": "^1.57.0",
+    "serverless-offline": "^5.12.0"
+  }
+}

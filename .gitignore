@@ -2,14 +2,16 @@
 
 # dependencies
 /node_modules
-/microservices/backend/node_modules
+/microservices/back-office/node_modules
+/microservices/app/node_modules
 /.vscode
 /.pnp
 .pnp.js
 
 # serverless
 /.serverless
-/microservices/backend/.serverless
+/microservices/back-office/.serverless
+/microservices/app/.serverless
 
 # testing
 /coverage

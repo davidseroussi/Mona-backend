@@ -1,0 +1,23 @@
+service: mona-app
+
+provider:
+    name: aws
+    region: eu-west-3
+    runtime: nodejs12.x
+
+functions:
+    hello:
+        handler: index.hello
+        events:
+            - http:
+                method: get
+
+    get_exhibitions:
+        handler: controllers/exhibitions.getAll
+        events:
+            - http:
+                path: exhibitions
+                method: get
+
+plugins:
+    - serverless-offline

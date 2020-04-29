@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 
 const {Schema} = mongoose;
 const ratingSubSchema = require('./sub-rating');
+require('./artwork')
+require('./museum')
 
 const exhibitionSchema = new Schema({
+	museum: {
+		type: Schema.Types.ObjectId,
+		ref: 'Museum'
+	},
 	title: {
 		type: String,
 		required: [true, 'Title is missing']
