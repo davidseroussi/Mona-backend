@@ -13,11 +13,18 @@ functions:
                 method: get
                 path: /
 
-    get_exhibitions_of_categories:
+    get_exhibitions:
         handler: controllers/exhibitions.getExhibitions
         events:
             - http:
                 path: exhibitions
+                method: get
+
+    get_artworks:
+        handler: controllers/artworks.get
+        events:
+            - http:
+                path: artworks
                 method: get
 
 plugins:

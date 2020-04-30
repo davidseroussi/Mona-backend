@@ -7,10 +7,6 @@ const Database = require('../core/database');
 
 Database.connect();
 
-const getAllExhibitions = async _ => Exhibition.find({})
-	.exec()
-	.then(exhibitions => Request.response(200, exhibitions))
-	.catch(Request.dbError);
 
 const getRelevantCategories = async _ => {
 	const categories = ['Sciences', 'Cinéma', 'Arts Visuels', 'Sculpture', 'Musique']
@@ -18,7 +14,6 @@ const getRelevantCategories = async _ => {
 }
 
 const getExhibitionsOfCategories = async data => {
-
 	let condition = {};
 
 	if (!R.isNil(data.categories) && data.categories.length !== 0) {
@@ -35,12 +30,10 @@ const getExhibitionsOfCategories = async data => {
 }
 
 
-const getAll = async event => RequestHandler.handle(getAllExhibitions)(event);
 const getCategories = async event => RequestHandler.handle(getRelevantCategories)(event);
 const getExhibitions = async event => RequestHandler.handle(getExhibitionsOfCategories, ['multiValueQueryStringParameters'])(event);
 
 module.exports = {
-	getAll,
 	getCategories,
 	getExhibitions
 }

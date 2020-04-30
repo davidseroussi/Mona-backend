@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ratingSubSchema = require('./sub-rating');
+require('./exhibition');
 
 const artworkSchema = new mongoose.Schema({
 	title: {
