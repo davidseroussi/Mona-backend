@@ -1,13 +1,41 @@
 const mongoose = require('mongoose');
 
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 const ratingSubSchema = require('./sub-rating');
+require('./artwork')
+require('./museum')
 
 const exhibitionSchema = new Schema({
+	museum: {
+		type: Schema.Types.ObjectId,
+		ref: 'Museum'
+	},
 	title: {
 		type: String,
 		required: [true, 'Title is missing']
 	},
+	categories: [
+		{
+			type: String,
+			enum: [
+				'Sciences',
+				'Cinéma',
+				'Arts visuels',
+				'Sculpture',
+				'musique',
+				'Littérature',
+				'Arts de la scène',
+				'Photographie',
+				'Bande dessinée',
+				'Jeux Vidéos'
+			]
+		}
+	],
+	tags: [
+		{
+			type: String,
+		}
+	],
 	description: String,
 	imageUrl: String,
 	rates: [
