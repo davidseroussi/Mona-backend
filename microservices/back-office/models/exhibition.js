@@ -40,6 +40,7 @@ const exhibitionSchema = new Schema({
 	imageUrl: String,
 	rates: [
 		{
+			_id: false,
 			price: {
 				type: Number,
 				min: [0, 'Price cannot be negative']

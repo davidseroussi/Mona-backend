@@ -51,7 +51,7 @@ const updateArtworkOfMuseum = async data => {
 	artwork = await Artwork.findByIdAndUpdate(
 		data.artworkId,
 		data.artwork,
-		{new: true}
+		{new: true, runValidators: true}
 	).populate('exhibition').exec().catch(Request.dbError);
 
 	if (Request.hasError(artwork)) {

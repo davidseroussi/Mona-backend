@@ -24,7 +24,7 @@ const updateExhibitionOfMuseum = async data => {
 	const exhibition = await Exhibition.findByIdAndUpdate(
 		data.exhibitionId,
 		data.exhibition,
-		{ new: true }
+		{ new: true, runValidators: true }
 	).exec().catch(Request.dbError);
 
 	if (exhibition === null) {
