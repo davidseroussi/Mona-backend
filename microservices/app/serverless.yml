@@ -21,10 +21,10 @@ functions:
                 method: get
 
     get_artworks:
-        handler: controllers/artworks.get
+        handler: controllers/exhibitions.getArtworks
         events:
             - http:
-                path: artworks
+                path: exhibitions/{exhibitionId}/artworks
                 method: get
 
 plugins:

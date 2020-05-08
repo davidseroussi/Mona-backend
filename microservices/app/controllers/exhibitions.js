@@ -29,11 +29,32 @@ const getExhibitionsOfCategories = async data => {
 		.catch(Request.dbError);
 }
 
+const getArtworksOfExhibition = async data => {
+	const exhibition = await Exhibition.findById(data.exhibitionId)
+		.populate('artworks')
+		.exec()
+		.catch(() => null);
+
+    if(R.isNil(exhibition)){
+        return Request.error(404, "Exhibition not found");
+    }
+
+    return Request.response(200, exhibition.artworks);
+}
+
+const getArtworks_ = R.pipeWith(Request.hasNoError, [
+    Request.fieldCheck(['exhibitionId']),
+    getArtworksOfExhibition
+]);
+
 
 const getCategories = async event => RequestHandler.handle(getRelevantCategories)(event);
 const getExhibitions = async event => RequestHandler.handle(getExhibitionsOfCategories, ['multiValueQueryStringParameters'])(event);
+const getArtworks = async event => RequestHandler.handle(getArtworks_, ['pathParameters'])(event);
+
 
 module.exports = {
 	getCategories,
-	getExhibitions
+	getExhibitions,
+	getArtworks
 }
