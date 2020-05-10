@@ -72,8 +72,13 @@ const createExhibitionOfMuseum = async data => {
 		return Request.error(404, 'Museum not found');
 	}
 
-	const exhibition = await insertExhibition(new Exhibition({ title: data.title }))
-		.catch(Request.dbError);
+	const exhibition = await insertExhibition(new Exhibition({
+		title: data.title,
+		museum: museum._id
+	})).catch(Request.dbError);
+
+	console.log(museum._id);
+	console.log(exhibition);
 
 	if (Request.hasError(exhibition)) {
 		return exhibition;
